@@ -1,6 +1,6 @@
 # Browser Dating History Export Extension
 
-This Chrome extension allows users to export their browser history in an encrypted format for use with the Browser Dating website.
+This Chrome extension allows users to export their browser history in an encrypted format for use with the Dating website.
 
 ## Features
 
