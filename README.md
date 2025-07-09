@@ -60,4 +60,4 @@ This extension uses a hybrid encryption approach:
 
 ## Support
 
-For help or questions about this extension, please contact us at mail@driesdepoorter.be 
+For help or questions about this extension, please contact us at just@freuddit.com
