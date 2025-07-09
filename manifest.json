@@ -1,0 +1,28 @@
+{
+   "action": {
+      "default_icon": {
+         "128": "images/icon128.png",
+         "16": "images/icon16.png",
+         "48": "images/icon48.png"
+      },
+      "default_popup": "popup.html"
+   },
+   "background": {
+      "service_worker": "background.js"
+   },
+   "content_security_policy": {
+      "extension_pages": "script-src 'self'; object-src 'self'"
+   },
+   "description": "Export your browser history in an encrypted format.",
+   "icons": {
+      "128": "images/icon128.png",
+      "16": "images/icon16.png",
+      "48": "images/icon48.png"
+   },
+   "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAvp9b50hrrJ4dMx+8vqazYlpmw2Pox/ixaEby0tNLX0NiLYKDBLV6yYb+I5cHOFKMJLHHoxb0C43qYZtdiH4cmXEF8VGAkwexik1rXks38CVG0j18ldB/HMQ44of9SiSskCgNogyek2XEaXJIAKRsV0/z/n3lRpMIXk14KDivpdybHkNWFrJUjlY9R2akmljMs8TUcbRO5i82csf3kXjjfUqx1YAdwBnTEo5mpDGGdNLrm/IWYN7uzlrCFNQduCnI/XjN/6NTgS5IjTbTsKb7URgouNgjB1HT5wXZqcuzrQgT9CLX6IM3zTbeZaf89qUc/DzfE+thlMhwumx6YgG8jwIDAQAB",
+   "manifest_version": 3,
+   "name": "Browser History Export",
+   "permissions": [ "history", "storage" ],
+   "update_url": "https://clients2.google.com/service/update2/crx",
+   "version": "2.2"
+}

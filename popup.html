@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Browser Dating History Export</title>
+  <script src="lib/crypto-js.min.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Mulish:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    /* Global CSS Variables - Using the website's design system */
+    :root {
+      /* Base colors - Black and white color scheme */
+      --background: 0 0% 98%;
+      --foreground: 0 0% 10%;
+      
+      /* Card colors */
+      --card: 0 0% 100%;
+      --card-foreground: 0 0% 10%;
+      
+      /* Primary colors - Using black for primary */
+      --primary: 0 0% 0%;
+      --primary-foreground: 0 0% 100%;
+      
+      /* Secondary colors */
+      --secondary: 0 0% 96%;
+      --secondary-foreground: 0 0% 10%;
+      
+      /* Muted colors */
+      --muted: 0 0% 96%;
+      --muted-foreground: 0 0% 45%;
+      
+      /* Accent colors */
+      --accent: 0 0% 94%;
+      --accent-foreground: 0 0% 10%;
+      
+      /* Destructive colors */
+      --destructive: 0 100% 40%;
+      --destructive-foreground: 0 0% 100%;
+      
+      /* Border colors */
+      --border: 0 0% 89%;
+      --input: 0 0% 89%;
+      --ring: 0 0% 0%;
+      
+      /* Radius */
+      --radius: 0.5rem;
+    }
+    
+    /* Animations */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Mulish', 'Inter', sans-serif;
+      width: 360px;
+      padding: 20px;
+      margin: 0;
+      background-color: hsl(var(--background));
+      color: hsl(var(--foreground));
+      line-height: 1.5;
+    }
+    
+    .container {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      animation: fadeIn 0.3s ease forwards;
+    }
+    
+    .header {
+      text-align: center;
+      margin-bottom: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    
+    .logo {
+      max-width: 80px;
+      margin: 0 auto 10px;
+      display: block;
+    }
+    
+    .logo img {
+      display: block;
+      margin: 0 auto;
+      width: 100%;
+      max-width: 100%;
+    }
+    
+    h1 {
+      font-size: 20px;
+      font-weight: 700;
+      margin: 10px 0;
+      color: hsl(var(--foreground));
+    }
+    
+    .screen {
+      display: none;
+    }
+    
+    .screen.active {
+      display: block;
+      animation: fadeIn 0.3s ease forwards;
+    }
+    
+    .btn {
+      background-color: hsl(var(--primary));
+      color: hsl(var(--primary-foreground));
+      border: none;
+      padding: 12px 16px;
+      border-radius: var(--radius);
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 600;
+      width: 100%;
+      transition: all 0.15s ease;
+      font-family: 'Mulish', 'Inter', sans-serif;
+    }
+    
+    .btn:hover {
+      opacity: 0.9;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    }
+    
+    .btn:disabled {
+      background-color: hsl(var(--muted));
+      color: hsl(var(--muted-foreground));
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+    
+    .error {
+      color: hsl(var(--destructive));
+      background-color: hsl(var(--destructive), 0.1);
+      padding: 14px;
+      border-radius: var(--radius);
+      margin-top: 16px;
+      font-size: 14px;
+      border: 1px solid hsl(var(--destructive), 0.2);
+    }
+    
+    .progress-container {
+      margin: 20px 0;
+      background-color: hsl(var(--accent));
+      border-radius: var(--radius);
+      overflow: hidden;
+    }
+    
+    .progress-bar {
+      height: 6px;
+      background-color: hsl(var(--primary));
+      width: 0%;
+      transition: width 0.3s;
+    }
+    
+    .info-text {
+      font-size: 14px;
+      line-height: 1.6;
+      margin-bottom: 20px;
+      color: hsl(var(--foreground));
+    }
+    
+    .info-text p {
+      margin-bottom: 8px;
+    }
+    
+    .success-message {
+      text-align: center;
+      color: hsl(var(--primary));
+      font-weight: 600;
+      margin-bottom: 20px;
+    }
+    
+    .export-info {
+      background-color: hsl(var(--secondary));
+      border-radius: var(--radius);
+      padding: 16px;
+      font-size: 14px;
+      margin-bottom: 16px;
+      border: 1px solid hsl(var(--border));
+    }
+    
+    .export-info p {
+      margin: 0 0 8px 0;
+    }
+    
+    .export-info strong {
+      font-weight: 600;
+    }
+    
+    .card {
+      background-color: hsl(var(--card));
+      border-radius: var(--radius);
+      padding: 20px;
+      box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+      transition: box-shadow 0.2s ease, transform 0.2s ease;
+      border: 1px solid hsl(var(--border));
+    }
+    
+    .card:hover {
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <div class="logo">
+        <img src="images/logo128.png" alt="Browser Export Logo" />
+      </div>
+      <h1>Browser Export</h1>
+      <p class="info-text" style="text-align:center;margin-top:4px;font-size:13px;">by Dries Depoorter</p>
+    </div>
+
+    <!-- Initial Screen -->
+    <div class="screen active" id="initial-screen">
+      <div class="card">
+        <div class="info-text">
+          <p>This extension allows you to export your browser history in a secure, encrypted format.</p>
+          <p>Your privacy is protected throughout the entire process.</p>
+        </div>
+        <button id="start-export" class="btn">Start Export Process</button>
+      </div>
+    </div>
+
+    <!-- Processing Screen -->
+    <div class="screen" id="processing-screen">
+      <div class="card">
+        <div class="info-text">
+          <p>Processing your browser history...</p>
+          <p>This may take a few moments depending on the size of your history.</p>
+        </div>
+        <div class="progress-container">
+          <div class="progress-bar" id="progress-bar"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Export Screen -->
+    <div class="screen" id="export-screen">
+      <div class="card">
+        <div class="success-message">
+          <p>Your browser history has been processed!</p>
+        </div>
+        <div class="export-info">
+          <p><strong>Domains processed:</strong> <span id="domain-count">0</span></p>
+          <p><strong>File size:</strong> <span id="file-size">0 KB</span></p>
+          <p><strong>Date:</strong> <span id="export-date">-</span></p>
+          <!-- <p><strong>Encryption:</strong> <span id="encryption-method">RSA-OAEP + AES-GCM (Asymmetric)</span></p> -->
+        </div>
+        <button id="download-export" class="btn">Download History File</button>
+        <div class="info-text" style="margin-top: 16px; font-size: 13px;">
+          <p>Next, visit <strong>Browser.dating</strong> to upload this file in your profile.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Error Screen -->
+    <div class="screen" id="error-screen">
+      <div class="card">
+        <div class="error">
+          <p>An error occurred during the export process:</p>
+          <p id="error-message"></p>
+        </div>
+        <button id="retry-button" class="btn">Try Again</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html> 
