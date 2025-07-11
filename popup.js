@@ -4,6 +4,7 @@ import {
   getDelegatedDecryptionToken
 } from './utils/crypto.js';
 
+console.log("Start Export button clicked");
 document.addEventListener('DOMContentLoaded', function() {
   // DOM Elements
   const initialScreen = document.getElementById('initial-screen');
@@ -53,6 +54,7 @@ document.addEventListener('DOMContentLoaded', function() {
       }
     }, interval);
   }
+console.log("Export function reached", { data });
 
   // Format bytes to human-readable size
   function formatBytes(bytes, decimals = 2) {
