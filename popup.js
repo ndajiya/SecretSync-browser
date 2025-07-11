@@ -1,3 +1,9 @@
+import {
+  getWalletDerivedAESKey,
+  encryptDataAES,
+  getDelegatedDecryptionToken
+} from './utils/crypto.js';
+
 document.addEventListener('DOMContentLoaded', function() {
   // DOM Elements
   const initialScreen = document.getElementById('initial-screen');
