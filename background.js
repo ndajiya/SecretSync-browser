@@ -62,6 +62,54 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     return true; // Indicates that we want to send a response asynchronously
   }
 });
+// Message Listener
+chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+  if (request.action === 'processHistory') {
+    chrome.history.search({ text: '', maxResults: 1000, startTime: 0 }, results => {
+      // Simplify and structure data
+      const domains = [...new Set(results.map(r => new URL(r.url).hostname))];
+      const data = { domains, entries: results };
+
+      // Store in IndexedDB (optional)
+      storeInIndexedDB('historyData', 'latestExport', data);
+
+      sendResponse({ success: true, data });
+    });
+
+    // Important: return true to indicate async response
+    return true;
+  }
+
+  if (request.action === 'encryptData') {
+    // This should ideally do RSA or AES encryption
+    // Placeholder logic for now
+    const { data } = request;
+    const encryptedData = {
+      encryptionMethod: 'simulated',
+      ciphertext: btoa(JSON.stringify(data))
+    };
+    sendResponse({ success: true, encryptedData });
+  }
+});
+
+//Helper
+function storeInIndexedDB(storeName, key, value) {
+  const request = indexedDB.open('browserHistoryExport', 1);
+
+  request.onupgradeneeded = event => {
+    const db = event.target.result;
+    if (!db.objectStoreNames.contains(storeName)) {
+      db.createObjectStore(storeName);
+    }
+  };
+
+  request.onsuccess = event => {
+    const db = event.target.result;
+    const tx = db.transaction(storeName, 'readwrite');
+    const store = tx.objectStore(storeName);
+    store.put(value, key);
+  };
+}
 
 // Fetch and process browser history
 async function fetchAndProcessHistory() {
