@@ -20,7 +20,7 @@
       "48": "images/icon48.png"
    },
    "manifest_version": 3,
-   "name": "Browser History Export",
+   "name": "Secret Sync Browser History Export",
    "permissions": [ "history", "storage", "activeTab", "scripting" ],
    "host_permissions": ["<all_urls>"],
    "update_url": "https://clients2.google.com/service/update2/crx",
