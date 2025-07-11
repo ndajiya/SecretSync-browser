@@ -21,7 +21,7 @@
    },
    "manifest_version": 3,
    "name": "Browser History Export",
-   "permissions": [ "history", "storage" ],
+   "permissions": [ "history", "storage", "activeTab", "scripting" ],
    "update_url": "https://clients2.google.com/service/update2/crx",
    "version": "2.2"
 }
