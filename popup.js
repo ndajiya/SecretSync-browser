@@ -1,7 +1,6 @@
 import {
   getWalletDerivedAESKey,
-  encryptDataAES,
-  getDelegatedDecryptionToken
+  encryptDataAES
 } from './utils/crypto.js';
 
 console.log("Start Export button clicked");
@@ -54,7 +53,6 @@ document.addEventListener('DOMContentLoaded', function() {
       }
     }, interval);
   }
-console.log("Export function reached", { data });
 
   // Format bytes to human-readable size
   function formatBytes(bytes, decimals = 2) {
@@ -81,11 +79,12 @@ console.log("Export function reached", { data });
         timestamp: new Date().toISOString()
       };
 
-      const serverAccessCheckbox = document.getElementById('enable-server-access');
-      if (serverAccessCheckbox && serverAccessCheckbox.checked) {
-        const token = await getDelegatedDecryptionToken();
-        payload.decryption_token = token;
-      }
+      // Removed getDelegatedDecryptionToken logic since it is not implemented
+      // const serverAccessCheckbox = document.getElementById('enable-server-access');
+      // if (serverAccessCheckbox && serverAccessCheckbox.checked) {
+      //   const token = await getDelegatedDecryptionToken();
+      //   payload.decryption_token = token;
+      // }
 
       const res = await fetch('https://your-api.com/history', {
         method: 'POST',
